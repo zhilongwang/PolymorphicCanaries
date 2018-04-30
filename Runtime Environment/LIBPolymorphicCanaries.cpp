@@ -34,7 +34,7 @@
 #include <map>
 #include <iostream>
 
-#include "libredundantguard.h"
+#include "LIBPolymorphicCanaries"
 
 /* (glibc) interposition prototypes */
 sighandler_t __sys_signal_handler                                       = NULL;
