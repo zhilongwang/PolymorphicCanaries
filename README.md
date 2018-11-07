@@ -1,8 +1,8 @@
 # To-Detect-Stack-Buffer-Overflow-With-Polymorphic-Canaries.  
 =======================================================.  
-The Implementation of:
 A High Efficient Protection against Brute-force Attacks
 =======================================================. 
+
 ## Authors
 - Zhilong Wang <mg1633081@smail.nju.edu.cn>
 - Xuhua Ding <xhding@smu.edu.sg>
