@@ -1,31 +1,8 @@
 # To-Detect-Stack-Buffer-Overflow-With-Polymorphic-Canaries.  
 =======================================================.  
+The Implementation of:
 A High Efficient Protection against Brute-force Attacks
 =======================================================. 
-
-
-Implementation of Polymorphic Canaries.
-
-
-## Installation
-
-### Compile your source code
-~~~~{.sh}
-# compile llvm pass
-$ cd Compiler based Implementation/P-SSP/
-$ make
-
-# install z3 and system deps
-$ ./setup.sh
-
-# install using virtual env
-$ virtualenv venv
-$ source venv/bin/activate
-$ pip install .
-~~~~
-
-### Rewrite your binary file
-
 ## Authors
 - Zhilong Wang <mg1633081@smail.nju.edu.cn>
 - Xuhua Ding <xhding@smu.edu.sg>
@@ -33,7 +10,6 @@ $ pip install .
 - Jian Guo <mg1733051@smail.nju.edu.cn>
 - Jun Zhu <clearscreen@163.com>
 - Bing Mao <maobing@nju.edu.cn>
-
 
 
 ## Publications
@@ -57,3 +33,77 @@ To Detect Stack Buffer Overflow with Polymorphic Canaries
   month={Jun}
 }
 ```
+
+## Installation
+
+### Compiler based PSSP
+For program with source code.
+
+#### Build Runtime Environment
+~~~~{.sh}
+# build runtime environment
+$ cd /Runtime Environment
+$ make
+~~~~
+
+#### Build Compiler Plugin
+Make your choose according your needs.
+~~~~{.sh}
+# build LLVM pass 
+$ mkdir build && cd build
+$ cmake ..
+$ make
+$ cd Compiler based Implementation/P-SSP
+$ make
+
+# build gcc plugin(if your compiler is GCC)
+$ mkdir build && cd build
+$ cmake ..
+$ make
+$ cd Compiler based Implementation/P-SSP
+$ make
+~~~~
+
+#### Compile your Program
+
+##### GCC
+~~~~{.sh}
+# For small program, compile your application with the following (GNU GCC) flags: 
+$ gcc -fstack-protector -fplugin=<PROJECT_SOURCE_DIR>/GCC_PLUGIN/PolymorphicCanaries.so test.c -o test
+
+# For larger projects, adding `-fstack-protector',`-fno-omit-frame-pointer', and `-fplugin=<PROJECT_SOURCE_DIR>/GCC_PLUGIN/PolymorphicCanaries.so' to `CFLAGS'.
+~~~~
+
+##### LLVM
+~~~~{.sh}
+# For small program, compile your application with the following flags: 
+$ clang -Xclang -load -Xclang <PROJECT_SOURCE_DIR>/Compiler based Implementation/P-SSP/libStackDoubleProtector.so test.c -o test
+
+
+# For larger projects, adding `-Xclang -load -Xclang <PROJECT_SOURCE_DIR>/Compiler based Implementation/P-SSP/libStackDoubleProtector.so' to `CFLAGS'.
+~~~~
+
+#### Run your program with PSSP
+~~~~{.sh}
+# run 
+$ export LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime Environment/LIBPolymorphicCanaries.so
+$ ./yourprogram
+~~~~
+
+
+### Binary rewriter
+For program without source code. 
+
+#### Build Instrumentor
+~~~~{.sh}
+# Build runtime environment
+$ cd Binary based implementation/dynamic linked proram/
+$ make
+
+# Rewrite your programs
+$ ./Binary based implementation/dynamic linked proram/InstrumentationCode yourprogram
+
+# Run your program with PSSP
+$ export LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime Environment/LIBPolymorphicCanaries.so
+$ ./yourprogram
+~~~~
