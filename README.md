@@ -6,7 +6,33 @@ A High Efficient Protection against Brute-force Attacks
 
 Implementation of Polymorphic Canaries.
 
-TO DO: How to use this project.
+
+## Installation
+
+### Compile your source code
+~~~~{.sh}
+# compile llvm pass
+$ cd Compiler based Implementation/P-SSP/
+$ make
+
+# install z3 and system deps
+$ ./setup.sh
+
+# install using virtual env
+$ virtualenv venv
+$ source venv/bin/activate
+$ pip install .
+~~~~
+
+### Rewrite your binary file
+
+## Authors
+- Zhilong Wang <mg1633081@smail.nju.edu.cn>
+- Xuhua Ding <xhding@smu.edu.sg>
+- Chengbin Pang <mg1733051@smail.nju.edu.cn>
+- Jian Guo <mg1733051@smail.nju.edu.cn>
+- Jun Zhu <clearscreen@163.com>
+- Bing Mao <maobing@nju.edu.cn>
 
 
 
