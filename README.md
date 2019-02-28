@@ -7,7 +7,7 @@ A High Efficient Protection against Brute-force Attacks
 - Zhilong Wang <mg1633081@smail.nju.edu.cn>
 - Xuhua Ding <xhding@smu.edu.sg>
 - Chengbin Pang <mg1733051@smail.nju.edu.cn>
-- Jian Guo <mg1733051@smail.nju.edu.cn>
+- Jian Guo <mf1733018@smail.nju.edu.cn>
 - Jun Zhu <clearscreen@163.com>
 - Bing Mao <maobing@nju.edu.cn>
 
