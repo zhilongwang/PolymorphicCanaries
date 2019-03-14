@@ -50,17 +50,13 @@ $ make
 Make your choose according your needs.
 ~~~~{.sh}
 # build LLVM pass 
+$ cd Compiler based Implementation/P-SSP
 $ mkdir build && cd build
 $ cmake ..
-$ make
-$ cd Compiler based Implementation/P-SSP
 $ make
 
-# build gcc plugin(if your compiler is GCC)
-$ mkdir build && cd build
-$ cmake ..
-$ make
-$ cd Compiler based Implementation/P-SSP
+# build gcc plugin(if your compiler is GCC
+$ cd GCC_PLUGIN
 $ make
 ~~~~
 
