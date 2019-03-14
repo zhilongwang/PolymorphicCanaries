@@ -93,7 +93,7 @@ For program without source code.
 
 #### Customize glibc.    
 1. Download a version of [glibc](https://www.gnu.org/software/libc/) which is compatible with your OS.
-2. Customize the stack_chk_fail.c file in glibc according the template in [/Binary based implementation/dynamic linked proram/stack_chk_fail.c](https://github.com/zhilongwang/PolymorphicCanaries/blob/master/Binary%20based%20implementation/dynamic%20linked%20proram/stack_chk_fail.c)
+2. Customize the stack_chk_fail.c file in glibc according the template in [/Binary based implementation/dynamic linked proram/stack_chk_fail.c](https://github.com/zhilongwang/PolymorphicCanaries/blob/master/Binary%20based%20implementation/dynamic%20linked%20proram/stack_chk_fail.c) // Your may simply replace the file with our one.
 3. Build and install the modified glibc.
 
 
