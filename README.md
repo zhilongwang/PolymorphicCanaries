@@ -90,29 +90,29 @@ $ ./yourprogram
 ### Binary rewriter
 For program without source code. 
 
-#### Build Instrumentor
 
-Customize glibc.
-<font size=3>
+#### Customize glibc.   
+<font size=6>
 1. Download a version of [glibc](https://www.gnu.org/software/libc/) which is compatible with your OS.
 2. Customize the stack_chk_fail.c file in glibc according the template in [/Binary based implementation/dynamic linked proram/stack_chk_fail.c](https://github.com/zhilongwang/PolymorphicCanaries/blob/master/Binary%20based%20implementation/dynamic%20linked%20proram/stack_chk_fail.c)
 3. Build and install the modified glibc.
 </font>
 
-
+#### Build Instrumentor
 ~~~~{.sh}
 # Build instrumentor
 $ cd Binary based implementation/dynamic linked proram/
 $ make
 ~~~~   
 
+#### Rewrite your programs
 ~~~~{.sh}
 # Rewrite your programs
 $ ./Binary based implementation/dynamic linked proram/InstrumentationCode yourprogram
 ~~~~    
 
+#### Run your program with PSSP
 ~~~~{.sh}
-# Run your program with PSSP
 $ export LIB_LIBRARY_PATH=<CUSTOMIZED_GLIBC_LIB_DIR>/*.so
 $ export LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime Environment/LIBPolymorphicCanaries.so
 $ ./yourprogram
