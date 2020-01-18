@@ -1,3 +1,4 @@
+#include "llvm/CodeGen/TargetPassConfig.h"
 #include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/Analysis/BranchProbabilityInfo.h"
@@ -23,10 +24,8 @@
 #include "llvm/Pass.h"
 #include "llvm/Support/Casting.h"
 #include "llvm/Support/CommandLine.h"
-#include "llvm/Target/TargetLowering.h"
-#include "llvm/Target/TargetMachine.h"
-#include "llvm/Target/TargetOptions.h"
-#include "llvm/Target/TargetSubtargetInfo.h"
+#include "llvm/IR/LegacyPassManager.h"
+#include "llvm/Transforms/IPO/PassManagerBuilder.h"
 #include <utility>
 #include "StackDoubleProtector2.h"
 
@@ -37,41 +36,11 @@ using namespace llvm;
 STATISTIC(NumFunProtected, "Number of functions protected");
 STATISTIC(NumAddrTaken, "Number of local variables that have their address taken.");
 
-static cl::opt<bool> EnableSelectionDAGSP("enable-selectiondag-sdp2", cl::init(true), cl::Hidden);
-
 char StackDoubleProtector2::ID = 0;
-/*
-INITIALIZE_PASS_BEGIN(StackDoubleProtector, DEBUG_TYPE, "Insert stack double protectors", false, true);
-INITIALIZE_PASS_DEPENDENCY(TargetPassConfig);
-INITIALIZE_PASS_END(StackDoubleProtector, DEBUG_TYPE, "Insert stack double protectors", false, true);*/
-
-//FunctionPass *llvm::createStackDoubleProtectorPass() { return new StackDoubleProtector(); }
-
-/*void StackDoubleProtector::adjustForColoring(const AllocaInst *From, const AllocaInst *To) {
-
-//When coloring replaces one alloca with another, transfer the SSPLayoutKind tag from the remapped to the
-//target alloca. The remapped alloca should have a size smaller than or equal to the replacement alloca.
-SSPDLayoutMap::iterator I = layout.find(From);
-if (I != layout.end()) {
-SSPLayoutKind Kind = I->second;
-layout.erase(I);
-
-//Transfer the tag, but make sure that SSPLK_AddrOf does not overwrite
-//SSPLK_SmallArray or SSPLK_LargeArray, and make sure that SSPLK_SmallArray
-//does not overwrite SSPLK_LargeArray.
-I = layout.find(To);
-if (I == layout.end()) {
-layout.insert(std::make_pair(To, Kind));
-}
-else if (I->second != SSPLK_LargeArray && Kind != SSPLK_AddrOf) {
-I->second = Kind;
-}
-}
-}*/
 
 void StackDoubleProtector2::getAnalysisUsage(AnalysisUsage &AU) const {
-	AU.addRequired<TargetPassConfig>();
-	AU.addPreserved<DominatorTreeWrapperPass>();
+	AU.addRequired<DominatorTreeWrapperPass>();
+	AU.setPreservesAll();
 }
 
 /// \param [out] IsLarge is set to true if a protectable array is found and 
@@ -86,7 +55,7 @@ bool StackDoubleProtector2::ContainsProtectableArray(Type *Ty, bool &IsLarge, bo
 			// add stack protectors unless the array is a character array.
 			// However, in strong mode any array, regardless of type and size,
 			// triggers a protector.
-			if (!Strong && (InStruct || !Trip.isOSDarwin()))
+			if (!Strong && (InStruct))
 				return false;
 		}
 		// If an array has more than SSPBufferSize bytes of allocated space, then
@@ -203,8 +172,7 @@ static Constant* SegmentOffsetStack(IRBuilder<> &IRB, unsigned Offset, unsigned 
 static Value* getTheStackGuardValue(IRBuilder<> &IRB, unsigned offset) {
 	return SegmentOffsetStack(IRB, offset, 257); //257 is the x86_64's fs segment
 }
-static bool CreatePrologue(Function *F, Module *M, ReturnInst *RI,
-	const TargetLoweringBase *TLI, AllocaInst *&AI1, AllocaInst *&AI2) {
+static bool CreatePrologue(Function *F, Module *M, ReturnInst *RI, AllocaInst *&AI1, AllocaInst *&AI2) {
 	bool SupportSelectionDAGSP = false;
 	IRBuilder<> B(&F->getEntryBlock().front());
 	PointerType *PtrTy = Type::getInt8PtrTy(RI->getContext());
@@ -286,7 +254,7 @@ bool StackDoubleProtector2::InsertStackDoubleProtectors() {
 
 			HasPrologue = true;
 
-			CreatePrologue(F, M, RI, TLI, AI1, AI2);
+			CreatePrologue(F, M, RI, AI1, AI2);
 
 		}
 
@@ -446,15 +414,13 @@ bool StackDoubleProtector2::InsertStackDoubleProtectors() {
 }
 
 bool StackDoubleProtector2::runOnFunction(Function &Fn) {
+        outs() << "HELLO\n";
 	F = &Fn;
 	M = F->getParent();
 	DominatorTreeWrapperPass *DTWP = getAnalysisIfAvailable<DominatorTreeWrapperPass>();
 
 	DT = DTWP ? &DTWP->getDomTree() : nullptr;
 
-	TM = &getAnalysis<TargetPassConfig>().getTM<TargetMachine>();
-	Trip = TM->getTargetTriple();
-	TLI = TM->getSubtargetImpl(Fn)->getTargetLowering();
 	HasPrologue = false;
 	HasIRCheck = false;
 
@@ -471,5 +437,12 @@ bool StackDoubleProtector2::runOnFunction(Function &Fn) {
 }
 
 static RegisterPass<StackDoubleProtector2> X("SSPPass2", "Stack Double Protector2", false, false);
+
+static void registerStackDoubleProtector2Pass(const PassManagerBuilder &, PassManagerBase &PM){
+        PM.add(new DominatorTreeWrapperPass());
+	PM.add(new StackDoubleProtector2());
+}
+static RegisterStandardPasses RegisterStackDoubleProtector2Pass(PassManagerBuilder::EP_OptimizerLast, registerStackDoubleProtector2Pass);
+static RegisterStandardPasses RegisterStackDoubleProtector2Pass2(PassManagerBuilder::EP_EnabledOnOptLevel0, registerStackDoubleProtector2Pass);
 
 

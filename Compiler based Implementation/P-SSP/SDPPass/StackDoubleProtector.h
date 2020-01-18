@@ -7,15 +7,8 @@
 #include "llvm/IR/ValueMap.h"
 #include "llvm/Pass.h"
 
-namespace llvm {
-	class BasicBlock;
-	class DominatorTree;
-	class Function;
-	class Instruction;
-	class Module;
-	class TargetLoweringBase;
-	class TargetMachine;
-	class Type;
+using namespace llvm;
+namespace {
 	class StackDoubleProtector1 : public FunctionPass {
 	public:
 		enum SSPLayoutKind {
@@ -30,8 +23,8 @@ namespace llvm {
 		const TargetMachine *TM = nullptr;
 
 		///TLI - Keep a pointer of a TargetLowering to consult for determining target type sizes.
-		const TargetLoweringBase *TLI = nullptr;
-		Triple Trip;
+		// const TargetLoweringBase *TLI = nullptr;
+		//Triple Trip;
 
 		Function *F;
 		Module *M;

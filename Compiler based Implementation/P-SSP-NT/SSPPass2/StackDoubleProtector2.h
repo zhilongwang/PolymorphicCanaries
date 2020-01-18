@@ -22,9 +22,6 @@ namespace llvm {
 		const TargetMachine *TM = nullptr;
 
 		///TLI - Keep a pointer of a TargetLowering to consult for determining target type sizes.
-		const TargetLoweringBase *TLI = nullptr;
-		Triple Trip;
-
 		Function *F;
 		Module *M;
 

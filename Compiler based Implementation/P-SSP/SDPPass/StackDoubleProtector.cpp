@@ -23,10 +23,8 @@
 #include "llvm/Pass.h"
 #include "llvm/Support/Casting.h"
 #include "llvm/Support/CommandLine.h"
-#include "llvm/Target/TargetLowering.h"
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Target/TargetOptions.h"
-#include "llvm/Target/TargetSubtargetInfo.h"
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/Transforms/IPO/PassManagerBuilder.h"
 #include <utility>
@@ -39,21 +37,16 @@ using namespace llvm;
 STATISTIC(NumFunProtected, "Number of functions protected");
 STATISTIC(NumAddrTaken, "Number of local variables that have their address taken.");
 
-static cl::opt<bool> EnableSelectionDAGSP("enable-selectiondag-sddp", cl::init(true), cl::Hidden);
 
 char StackDoubleProtector1::ID = 0;
 
-/*INITIALIZE_PASS_BEGIN(StackDoubleProtector, DEBUG_TYPE, "Insert stack double protectors", false, true);
-INITIALIZE_PASS_DEPENDENCY(TargetPassConfig);
-INITIALIZE_PASS_END(StackDoubleProtector, DEBUG_TYPE, "Insert stack double protectors", false, true);*/
 
-//FunctionPass *llvm::createStackDoubleProtectorPass() { return new StackDoubleProtector(); }
-
-
+namespace {
 
 void StackDoubleProtector1::getAnalysisUsage(AnalysisUsage &AU) const {
-	AU.addRequired<TargetPassConfig>();
-	AU.addPreserved<DominatorTreeWrapperPass>();
+	AU.addRequired<DominatorTreeWrapperPass>();
+	//AU.addRequired<TargetPassConfig>();
+	AU.setPreservesAll();
 }
 
 /// \param [out] IsLarge is set to true if a protectable array is found and 
@@ -68,7 +61,7 @@ bool StackDoubleProtector1::ContainsProtectableArray(Type *Ty, bool &IsLarge, bo
 			// add stack protectors unless the array is a character array.
 			// However, in strong mode any array, regardless of type and size,
 			// triggers a protector.
-			if (!Strong && (InStruct || !Trip.isOSDarwin()))
+			if (!Strong && (InStruct))
 				return false;
 		}
 		// If an array has more than SSPBufferSize bytes of allocated space, then
@@ -189,7 +182,7 @@ static Value* getTheStackGuardValue(IRBuilder<> &IRB, unsigned offset) {
 	return SegmentOffsetStack(IRB, offset, 257); //257 is the x86_64's fs segment
 }
 static bool CreatePrologue(Function *F, Module *M, ReturnInst *RI,
-	const TargetLoweringBase *TLI, AllocaInst *&AI1, AllocaInst *&AI2) {
+	AllocaInst *&AI1, AllocaInst *&AI2) {
 	bool SupportSelectionDAGSP = false;
 	IRBuilder<> B(&F->getEntryBlock().front());
 	PointerType *PtrTy = Type::getInt8PtrTy(RI->getContext());
@@ -216,7 +209,6 @@ BasicBlock *StackDoubleProtector1::CreateFailBB() {
 	IRBuilder<> B(FailBB);
 	B.SetCurrentDebugLocation(DebugLoc::get(0, 0, F->getSubprogram()));
 	Constant *StackChkFail = M->getOrInsertFunction("__stack_chk_fail", Type::getVoidTy(Context));
-
 	B.CreateCall(StackChkFail, {});
 
 	B.CreateUnreachable();
@@ -234,7 +226,7 @@ bool StackDoubleProtector1::InsertStackDoubleProtectors() {
 
 		if (!HasPrologue) {
 			HasPrologue = true;
-			CreatePrologue(F, M, RI, TLI, AI1, AI2);
+			CreatePrologue(F, M, RI, AI1, AI2);
 		}
 
 		//SelectionDAG based code generation. Nothing else needs to be done here.
@@ -318,13 +310,10 @@ bool StackDoubleProtector1::InsertStackDoubleProtectors() {
 bool StackDoubleProtector1::runOnFunction(Function &Fn) {
 	F = &Fn;
 	M = F->getParent();
-	DominatorTreeWrapperPass *DTWP = getAnalysisIfAvailable<DominatorTreeWrapperPass>();
 
+        DominatorTreeWrapperPass *DTWP = getAnalysisIfAvailable<DominatorTreeWrapperPass>();
 	DT = DTWP ? &DTWP->getDomTree() : nullptr;
 
-	TM = &getAnalysis<TargetPassConfig>().getTM<TargetMachine>();
-	Trip = TM->getTargetTriple();
-	TLI = TM->getSubtargetImpl(Fn)->getTargetLowering();
 	HasPrologue = false;
 	HasIRCheck = false;
 
@@ -340,9 +329,17 @@ bool StackDoubleProtector1::runOnFunction(Function &Fn) {
 	return InsertStackDoubleProtectors();
 }
 
+}
+
+
+
 static RegisterPass<StackDoubleProtector1> X("SSPPass", "Stack Double Protector", false, false);
 
-static void registerMyPassPass(const PassManagerBuilder &, PassManagerBase &PM){
+static void registerStackDoubleProtector1Pass(const PassManagerBuilder &, PassManagerBase &PM){
+        PM.add(new DominatorTreeWrapperPass());
 	PM.add(new StackDoubleProtector1());
 }
-static RegisterStandardPasses RegisterMBAPass(PassManagerBuilder::EP_OptimizerLast, registerMyPassPass);
+static RegisterStandardPasses RegisterStackDoubleProtector1Pass(PassManagerBuilder::EP_OptimizerLast, registerStackDoubleProtector1Pass);
+static RegisterStandardPasses RegisterStackDoubleProtector1Pass2(PassManagerBuilder::EP_EnabledOnOptLevel0, registerStackDoubleProtector1Pass);
+
+
