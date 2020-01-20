@@ -76,13 +76,13 @@ $ gcc -fstack-protector -fplugin=<PROJECT_SOURCE_DIR>/GCC_PLUGIN/PolymorphicCana
 $ clang -Xclang -load -Xclang <PROJECT_SOURCE_DIR>/Compiler based Implementation/P-SSP/libStackDoubleProtector.so test.c -o test
 
 
-# For larger projects, adding `-Xclang -load -Xclang <PROJECT_SOURCE_DIR>/Compiler based Implementation/P-SSP/libStackDoubleProtector.so' to `CFLAGS'.
+# For larger projects, adding `-Xclang -load -Xclang <PROJECT_SOURCE_DIR>/Compiler_based_Implementation/P-SSP/libStackDoubleProtector.so' to `CFLAGS'.
 ~~~~
 
 #### Run your program with PSSP
 ~~~~{.sh}
 # run 
-$ export LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime Environment/LIBPolymorphicCanaries.so
+$ export LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Compiler_Based_Version/LIBPolymorphicCanaries.so
 $ ./yourprogram
 ~~~~
 
@@ -93,7 +93,7 @@ For program without source code.
 
 #### Customize glibc.    
 1. Download a version of [glibc](https://www.gnu.org/software/libc/) which is compatible with your OS.
-2. Customize the stack_chk_fail.c file in glibc according the template in [/Binary based implementation/dynamic linked proram/stack_chk_fail.c](https://github.com/zhilongwang/PolymorphicCanaries/blob/master/Binary%20based%20implementation/dynamic%20linked%20proram/stack_chk_fail.c) // Your may simply replace the file with our one.
+2. Customize the stack_chk_fail.c file in glibc according the template in [/Binary_based_implementation/dynamic linked proram/stack_chk_fail.c](https://github.com/zhilongwang/PolymorphicCanaries/blob/master/Binary%20based%20implementation/dynamic%20linked%20proram/stack_chk_fail.c) // Your may simply replace the file with our one.
 3. Build and install the modified glibc.
 
 
@@ -113,6 +113,6 @@ $ ./Binary based implementation/dynamic linked proram/InstrumentationCode yourpr
 #### Run your program with PSSP
 ~~~~{.sh}
 $ export LIB_LIBRARY_PATH=<CUSTOMIZED_GLIBC_LIB_DIR>/*.so
-$ export LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime Environment/LIBPolymorphicCanaries.so
+$ export LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Binary_Based_Version/LIBPolymorphicCanaries.so
 $ ./yourprogram
 ~~~~
