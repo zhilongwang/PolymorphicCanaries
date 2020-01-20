@@ -52,7 +52,7 @@ $ make
 Make your choose according your needs.
 ~~~~{.sh}
 # build LLVM pass 
-$ cd Compiler based Implementation/P-SSP
+$ cd Compiler_based_Implementation/P-SSP
 $ mkdir build && cd build
 $ cmake ..
 $ make
@@ -75,7 +75,7 @@ $ gcc -fstack-protector -fplugin=<PROJECT_SOURCE_DIR>/GCC_PLUGIN/PolymorphicCana
 ##### LLVM
 ~~~~{.sh}
 # For small program, compile your application with the following flags: 
-$ clang -Xclang -load -Xclang <PROJECT_SOURCE_DIR>/Compiler based Implementation/P-SSP/libStackDoubleProtector.so test.c -o test
+$ clang -Xclang -load -Xclang <PROJECT_SOURCE_DIR>/Compiler_based_Implementation/P-SSP/libStackDoubleProtector.so test.c -o test
 
 
 # For larger projects, adding `-Xclang -load -Xclang <PROJECT_SOURCE_DIR>/Compiler_based_Implementation/P-SSP/libStackDoubleProtector.so' to `CFLAGS'.
@@ -102,14 +102,14 @@ For program without source code.
 #### Build Instrumentor
 ~~~~{.sh}
 # Build instrumentor
-$ cd Binary based implementation/dynamic linked proram/
+$ cd Binary_based_implementation/dynamic linked proram/
 $ make
 ~~~~   
 
 #### Rewrite your programs
 ~~~~{.sh}
 # Rewrite your programs
-$ ./Binary based implementation/dynamic linked proram/InstrumentationCode yourprogram
+$ ./Binary_based_implementation/dynamic linked proram/InstrumentationCode yourprogram
 ~~~~    
 
 #### Run your program with PSSP
