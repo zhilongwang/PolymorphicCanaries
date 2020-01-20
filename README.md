@@ -42,7 +42,9 @@ For program with source code.
 #### Build Runtime Environment
 ~~~~{.sh}
 # build runtime environment
-$ cd /Runtime Environment
+$ cd /Runtime_Environment/Compiler_Based_Version/
+$ make
+$ cd /Runtime_Environment/Binary_Based_Version/
 $ make
 ~~~~
 
