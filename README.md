@@ -13,7 +13,7 @@ A High Efficient Protection against Brute-force Attacks
 
 
 ## Publications
-If you used our code, please cite our paper.
+If you use our code in your research, please cite our paper.
 
 ```
 To Detect Stack Buffer Overflow with Polymorphic Canaries
@@ -98,6 +98,12 @@ For program without source code.
 2. Customize the stack_chk_fail.c file in glibc according the template in [/Binary_based_implementation/dynamic linked proram/stack_chk_fail.c](https://github.com/zhilongwang/PolymorphicCanaries/blob/master/Binary%20based%20implementation/dynamic%20linked%20proram/stack_chk_fail.c) // Your may simply replace the file with our one.
 3. Build and install the modified glibc.
 
+#### Build Runtime Environment
+~~~~{.sh}
+# build runtime environment
+$ cd /Runtime_Environment/Binary_Based_Version/
+$ make
+~~~~
 
 #### Build Instrumentor
 ~~~~{.sh}
