@@ -44,8 +44,6 @@ For program with source code.
 # build runtime environment
 $ cd /Runtime_Environment/Compiler_Based_Version/
 $ make
-$ cd /Runtime_Environment/Binary_Based_Version/
-$ make
 ~~~~
 
 #### Build Compiler Plugin
@@ -89,7 +87,7 @@ $ ./yourprogram
 ~~~~
 
 
-### Binary rewriter
+### Binary Rewriter for Dynamic Linked Programs
 For program without source code. 
 
 
@@ -124,3 +122,7 @@ $ export LIB_LIBRARY_PATH=<CUSTOMIZED_GLIBC_LIB_DIR>/*.so
 $ export LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Binary_Based_Version/LIBPolymorphicCanaries.so
 $ ./yourprogram
 ~~~~
+
+### Binary Rewriter for Static Linked Programs
+Use Dyninst to rewrite your programs, We provide the code to rewrite the program based on [Dyninst](https://github.com/zhilongwang/PolymorphicCanaries/tree/master/Binary_based_implementation/static%20linked%20program)
+
