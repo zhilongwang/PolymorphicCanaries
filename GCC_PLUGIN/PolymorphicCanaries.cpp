@@ -21,7 +21,7 @@
 #include "PolymorphicCanaries.h"
 # include <stdio.h>
 # include <stdlib.h>
-#include<iostream>
+// #include<iostream>
 #if DEBUG_INSN
 
 static FILE *flog = NULL;
@@ -280,9 +280,9 @@ canary_pop(rtx *insn)
   }
 
   emit_insn_before(gen_rtx_SET(DImode,
-                                     creg,
-                                     canary_addr),
-                         *insn);
+                                creg,
+                                canary_addr),
+                              *insn);
 
   /* pop canary from shadow stack */
   movstr = "";
@@ -331,7 +331,7 @@ execute_redundantguard(void)
 #endif
 
   /* modify canary upon canary push and modify check upon pop*/
-  for (insn=get_insns(); insn; insn=NEXT_INSN(insn)) {
+  for (insn = get_insns(); insn; NEXT_INSN(insn)) {
     commitlog(insn, "INSN\n");
 
     /* ignore assembly */

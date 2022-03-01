@@ -1,4 +1,4 @@
-CXX		= g++
+CXX		= g++-5
 GCCPLUGINS_DIR	= $(shell $(CXX) -print-file-name=plugin)
 CXXFLAGS	= -I$(GCCPLUGINS_DIR)/include -shared -fPIC -O2 -fno-rtti -Wall
 ENV_CXXFLAGS	= -Wl,--no-as-needed -shared -fPIC -O2 -Wall -ldl -lpthread 
@@ -12,7 +12,7 @@ SHARED_OBJ	= $(SRC:.cpp=.so)
 
 all: $(SHARED_OBJ) 
 
-# build the plugin
+# build the plugin 
 $(SHARED_OBJ): $(SRC) $(SRC:.cpp=.h) offsets.h
 	$(CXX) $(CXXFLAGS) $(SRC) -o $@
 

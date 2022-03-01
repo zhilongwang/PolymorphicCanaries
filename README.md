@@ -56,6 +56,8 @@ $ cmake ..
 $ make
 
 # build gcc plugin(if your compiler is GCC
+$ sudo apt-get install build-essential
+$ sudo apt-get install gcc-<ver>-plugin-dev
 $ cd GCC_PLUGIN
 $ make
 ~~~~
