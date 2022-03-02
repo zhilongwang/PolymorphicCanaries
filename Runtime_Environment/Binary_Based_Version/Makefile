@@ -1,4 +1,4 @@
-CXX		= g++
+CXX		= g++-4.9
 GCCPLUGINS_DIR	= $(shell $(CXX) -print-file-name=plugin)
 CXXFLAGS	= -I$(GCCPLUGINS_DIR)/include -shared -fPIC -O2 -fno-rtti -Wall
 ENV_CXXFLAGS	= -Wl,--no-as-needed -shared -fPIC -O2 -Wall -ldl -lpthread 

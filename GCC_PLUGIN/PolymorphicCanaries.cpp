@@ -21,11 +21,9 @@
 #include "PolymorphicCanaries.h"
 # include <stdio.h>
 # include <stdlib.h>
-// #include<iostream>
+#include<iostream>
 #if DEBUG_INSN
-
-static FILE *flog = NULL;
-
+  static FILE *flog = NULL;
 /*
  * start the auditing process
  * open the logfile in appending mode
@@ -152,10 +150,8 @@ canary_pop(rtx *insn)
 
   if (!(GET_CODE(*insn) == INSN && GET_CODE(PATTERN(*insn)) == PARALLEL))
     return false;
-
   /* get first PARALLEL subexpression and check if SP_TLS_TEST */
   tls_set = XVECEXP(PATTERN(*insn), 0, 0);
-
   /* if not a canary check return */
   if (!(tls_set                                  &&
         GET_CODE(tls_set) == SET                 &&
@@ -279,9 +275,8 @@ canary_pop(rtx *insn)
     r3 = "%%edx";
   }
 
-  emit_insn_before(gen_rtx_SET(DImode,
-                                creg,
-                                canary_addr),
+  emit_insn_before(gen_rtx_SET(DImode,creg,
+                              canary_addr),
                               *insn);
 
   /* pop canary from shadow stack */
@@ -331,9 +326,10 @@ execute_redundantguard(void)
 #endif
 
   /* modify canary upon canary push and modify check upon pop*/
-  for (insn = get_insns(); insn; NEXT_INSN(insn)) {
-    commitlog(insn, "INSN\n");
-
+  for (insn = get_insns(); insn; insn = NEXT_INSN(insn)) {
+    #if DEBUG_INSN
+      commitlog(insn, "INSN\n");
+    #endif
     /* ignore assembly */
     if (GET_CODE(insn) == INSN && asm_noperands(PATTERN(insn)) >= 0)
       continue;

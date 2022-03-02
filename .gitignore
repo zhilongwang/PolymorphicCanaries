@@ -1,2 +1,3 @@
-testsets
+testsets/nginx-1.4.0  
+testsets/nginx-1.4.0.tar.gz
 .vagrant

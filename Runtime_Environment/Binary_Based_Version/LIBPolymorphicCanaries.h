@@ -73,23 +73,15 @@ typedef struct {
 #define GET_TLS(x)                \
     asm volatile ("mov %%fs:0x0, %0" : "=r" (x));
 
-#define SET_CHECK_CANARY(x)   \
-    asm volatile ("mov %0, %%fs:" CHECK_CANARY_OFFSET ""::"r" (x) : "memory");
+#define SET_REDUNDANT_STACK_GUARD(x)   \
+    asm volatile ("mov %0, %%fs:" REDUNDANT_CANARY_OFFSET ""::"r" (x) : "memory");
 
-#define GET_CHECK_CANARY(x)   \
-    asm volatile ("mov %%fs:" CHECK_CANARY_OFFSET  ", %0" : "=r" (x));
+#define SET_CMP_STACK_GUARD(x)   \
+    asm volatile ("mov %0, %%fs:" CMP_CANARY_OFFSET ""::"r" (x) : "memory");
 
-#define SET_CANARY1(x)   \
-    asm volatile ("mov %0, %%fs:" CANARY1_OFFSET ""::"r" (x) : "memory");
+#define GET_CMP_STACK_GUARD(x)   \
+    asm volatile ("mov %%fs:" CMP_CANARY_OFFSET  ", %0" : "=r" (x));
 
-#define GET_CANARY1(x)   \
-    asm volatile ("mov %%fs:" CANARY1_OFFSET  ", %0" : "=r" (x));
-
-#define SET_CANARY2(x)   \
-    asm volatile ("mov %0, %%fs:" CANARY2_OFFSET ""::"r" (x) : "memory");
-
-#define GET_CANARY2(x)   \
-    asm volatile ("mov %%fs:" CANARY2_OFFSET  ", %0" : "=r" (x));
 #else
 #error  "Unsupported architecture"
 #endif

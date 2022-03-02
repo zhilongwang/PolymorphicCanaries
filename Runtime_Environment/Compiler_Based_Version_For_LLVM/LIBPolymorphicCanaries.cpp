@@ -272,6 +272,4 @@ setup_redundantguard(void)
 {
   /* get a fresh canary */
   init_canary();
-
-
 }

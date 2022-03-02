@@ -16,8 +16,6 @@ A High Efficient Protection against Brute-force Attacks
 If you use our code in your research, please cite our paper.
 
 ```
-To Detect Stack Buffer Overflow with Polymorphic Canaries
-
 @inproceedings{polymorphiccanaries,
   author = {Z. Wang and X. Ding and C. Pang and J. Guo and J. Zhu and B. Mao},
   booktitle = {2018 48th Annual IEEE/IFIP International Conference on Dependable Systems and Networks (DSN)},
@@ -33,98 +31,142 @@ To Detect Stack Buffer Overflow with Polymorphic Canaries
   month={Jun}
 }
 ```
+## GCC Version
+The GCC version is tested on Debian 10 with gcc-4.9/g++4.9.
 
-## Installation
+### Install Dependency (gcc/g++, gcc-<version>-plugin-dev, build-essential)
 
-### Compiler based PSSP
-For program with source code.
+1. add follow source to /etc/apt/sources.list
+```
+deb http://ftp.us.debian.org/debian/ jessie main contrib non-free
+#deb-src http://ftp.us.debian.org/debian/ jessie main contrib 
+```
 
-#### Build Runtime Environment
+2. add key 
+```
+$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7638D0442B90D010
+$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 
+$ sudo apt-get update
+```
+
+3. install gcc/g++, build-essential and gcc-<version>-plugin-dev
+```
+$ 
+$ sudo apt install gcc-4.9 g++-4.9 gcc-4.9-plugin-dev build-essential
+```
+
+### Build Plugin and Library 
+1. build gcc plugin
+```
+$ cd GCC_PLUGIN
+$ make
+```
+2. build runtime library
+```
+$ cd Runtime_Environment/Binary_Based_Version/
+$ make
+```
+
+### Compile Your Program or Project
+
+1. For small program, compile your application with the following (GNU GCC) flags: 
+```
+$ gcc -fstack-protector-all -fplugin=<PROJECT_SOURCE_DIR>/GCC_PLUGIN/PolymorphicCanaries.so demo.c -o demo
+```
+
+2. For Larger projects, adding 
+```
+-fstack-protector-all -fplugin=<PROJECT_SOURCE_DIR>/GCC_PLUGIN/PolymorphicCanaries.so
+```
+to 'CFLAGS' or 'CXXFLAGS' through configure, makefile, or Cmakefile.
+
+### Run Compiled Program
+```
+LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Binary_Based_Version/LIBPolymorphicCanaries.so ./demo
+```
+
+
+## LLVM Version
+LLVM Version is tested on llvm-6.0
+
+### Install Dependency (LLVM, Clang) and 
+1. install llvm and clang
+```
+# sudo apt-get install llvm-6.0 clang-6.0
+```
+
+### Build LLVM Pass and and Library 
+
+1. build LLVM Pass 
+```
+$ cd Compiler_based_Implementation/P-SSP
+$ mkdir build && cd build
+$ cmake ..
+$ make
+```
+
+2. Build Runtime Environment
 ~~~~{.sh}
 # build runtime environment
 $ cd /Runtime_Environment/Compiler_Based_Version/
 $ make
 ~~~~
 
-#### Build Compiler Plugin
-Make your choose according your needs.
-~~~~{.sh}
-# build LLVM pass 
-$ cd Compiler_based_Implementation/P-SSP
-$ mkdir build && cd build
-$ cmake ..
+### Compile Your Program or Project
+1. For small program, compile your application with the following flags
+```
+$ clang -Xclang -load -Xclang <PROJECT_SOURCE_DIR>/Compiler_based_Implementation/P-SSP/libStackDoubleProtector.so demo.c -o demo
+```
+
+
+2. For larger projects, adding 
+```
+-Xclang -load -Xclang <PROJECT_SOURCE_DIR>/Compiler_based_Implementation/P-SSP/libStackDoubleProtector.so
+```
+to `CFLAGS' or `CXXFLAGS' through configure, makefile, or Cmakefile.
+
+### Run Compiled Program
+```
+LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Compiler_Based_Version/LIBPolymorphicCanaries.so ./demo
+```
+
+
+## Binary Rewriter Version
+
+
+### Dynamic Linked Binary
+
+1. Build Instrumentor
+```
+$ cd Binary_based_implementation/dynamic linked proram/
 $ make
+```
 
-# build gcc plugin(if your compiler is GCC
-$ sudo apt-get install build-essential
-$ sudo apt-get install gcc-<ver>-plugin-dev
-$ cd GCC_PLUGIN
+2. Build and install the customized GLIBC
+
+Download a version of [glibc](https://www.gnu.org/software/libc/) which is compatible with your OS:
+```
+$ cd Binary_based_implementation/dynamic linked proram/
 $ make
-~~~~
-
-#### Compile your Program
-
-##### GCC
-~~~~{.sh}
-# For small program, compile your application with the following (GNU GCC) flags: 
-$ gcc -fstack-protector -fplugin=<PROJECT_SOURCE_DIR>/GCC_PLUGIN/PolymorphicCanaries.so test.c -o test
-
-# For larger projects, adding `-fstack-protector',`-fno-omit-frame-pointer', and `-fplugin=<PROJECT_SOURCE_DIR>/GCC_PLUGIN/PolymorphicCanaries.so' to `CFLAGS'.
-~~~~
-
-##### LLVM
-~~~~{.sh}
-# For small program, compile your application with the following flags: 
-$ clang -Xclang -load -Xclang <PROJECT_SOURCE_DIR>/Compiler_based_Implementation/P-SSP/libStackDoubleProtector.so test.c -o test
-
-
-# For larger projects, adding `-Xclang -load -Xclang <PROJECT_SOURCE_DIR>/Compiler_based_Implementation/P-SSP/libStackDoubleProtector.so' to `CFLAGS'.
-~~~~
-
-#### Run your program with PSSP
-~~~~{.sh}
-# run 
-$ export LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Compiler_Based_Version/LIBPolymorphicCanaries.so
-$ ./yourprogram
-~~~~
-
-
-### Binary Rewriter for Dynamic Linked Programs
-For program without source code. 
-
-
+```
 #### Customize glibc.    
 1. Download a version of [glibc](https://www.gnu.org/software/libc/) which is compatible with your OS.
 2. Customize the stack_chk_fail.c file in glibc according the template in [/Binary_based_implementation/dynamic linked proram/stack_chk_fail.c](https://github.com/zhilongwang/PolymorphicCanaries/blob/master/Binary%20based%20implementation/dynamic%20linked%20proram/stack_chk_fail.c) // Your may simply replace the file with our one.
 3. Build and install the modified glibc.
 
-#### Build Runtime Environment
-~~~~{.sh}
-# build runtime environment
-$ cd /Runtime_Environment/Binary_Based_Version/
-$ make
-~~~~
+3. Rewrite your programs
+```
+$ ./Binary_based_implementation/dynamic linked proram/InstrumentationCode ./demo
+```  
 
-#### Build Instrumentor
-~~~~{.sh}
-# Build instrumentor
-$ cd Binary_based_implementation/dynamic linked proram/
-$ make
-~~~~   
-
-#### Rewrite your programs
-~~~~{.sh}
-# Rewrite your programs
-$ ./Binary_based_implementation/dynamic linked proram/InstrumentationCode yourprogram
-~~~~    
-
-#### Run your program with PSSP
+4. Run your program with PSSP
 ~~~~{.sh}
 $ export LIB_LIBRARY_PATH=<CUSTOMIZED_GLIBC_LIB_DIR>/*.so
 $ export LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Binary_Based_Version/LIBPolymorphicCanaries.so
-$ ./yourprogram
+$ ./demo
 ~~~~
 
-### Binary Rewriter for Static Linked Programs
-Use Dyninst to rewrite your programs, We provide the code to rewrite the program based on [Dyninst](https://github.com/zhilongwang/PolymorphicCanaries/tree/master/Binary_based_implementation/static%20linked%20program)
+### Static Linked Binary
+
+We provide a binary rewriter based on [Dyninst](http://www.umiacs.umd.edu/mc2symposium/slides/securityTutorialDyninst.pdf) for static linked programs. The implementation is located at [Dyninst Tool](https://github.com/zhilongwang/PolymorphicCanaries/tree/master/Binary_based_implementation/static%20linked%20program).
 
