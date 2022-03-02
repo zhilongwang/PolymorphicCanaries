@@ -36,7 +36,7 @@ The GCC version is tested on Debian 10 with gcc-4.9/g++-4.9.
 
 ### Install Dependency (gcc/g++, gcc-<version>-plugin-dev, build-essential)
 
-1. add follow source to /etc/apt/sources.list
+1. add following source to /etc/apt/sources.list
 ```
 deb http://ftp.us.debian.org/debian/ jessie main contrib non-free
 deb-src http://ftp.us.debian.org/debian/ jessie main contrib 
