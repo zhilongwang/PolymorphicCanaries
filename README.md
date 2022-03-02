@@ -42,7 +42,7 @@ deb http://ftp.us.debian.org/debian/ jessie main contrib non-free
 deb-src http://ftp.us.debian.org/debian/ jessie main contrib 
 ```
 
-2. add key 
+2. add key and update
 ```
 $ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7638D0442B90D010
 $ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 
@@ -50,7 +50,8 @@ $ sudo apt-get update
 ```
 
 3. install gcc/g++, build-essential and gcc-<version>-plugin-dev
-``` 
+```
+$ 
 $ sudo apt install gcc-4.9 g++-4.9 gcc-4.9-plugin-dev build-essential
 ```
 
@@ -68,12 +69,12 @@ $ make
 
 ### Compile Your Program or Project
 
-1. For small program, compile your application with the following (GNU GCC) flags: 
+1. For single file program, compile your application with the following (GNU GCC) flags: 
 ```
 $ gcc -fstack-protector-all -fplugin=<PROJECT_SOURCE_DIR>/GCC_PLUGIN/PolymorphicCanaries.so demo.c -o demo
 ```
 
-2. For Larger projects, adding 
+2. For large projects, adding 
 ```
 -fstack-protector-all -fplugin=<PROJECT_SOURCE_DIR>/GCC_PLUGIN/PolymorphicCanaries.so
 ```
@@ -81,7 +82,7 @@ to 'CFLAGS' or 'CXXFLAGS' through configure, makefile, or Cmakefile.
 
 ### Run Compiled Program
 ```
-$ LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Binary_Based_Version/LIBPolymorphicCanaries.so ./demo
+LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Binary_Based_Version/LIBPolymorphicCanaries.so ./demo
 ```
 
 
@@ -91,7 +92,7 @@ LLVM Version is tested on llvm-6.0
 ### Install Dependency (LLVM, Clang) and 
 1. install llvm and clang
 ```
-$ sudo apt-get install llvm-6.0 clang-6.0
+# sudo apt-get install llvm-6.0 clang-6.0
 ```
 
 ### Build LLVM Pass and and Library 
@@ -105,11 +106,11 @@ $ make
 ```
 
 2. Build Runtime Environment
-```
+~~~~{.sh}
 # build runtime environment
 $ cd /Runtime_Environment/Compiler_Based_Version/
 $ make
-```
+~~~~
 
 ### Compile Your Program or Project
 1. For small program, compile your application with the following flags
@@ -126,15 +127,16 @@ to `CFLAGS' or `CXXFLAGS' through configure, makefile, or Cmakefile.
 
 ### Run Compiled Program
 ```
-$ LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Compiler_Based_Version/LIBPolymorphicCanaries.so ./demo
+LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Compiler_Based_Version/LIBPolymorphicCanaries.so ./demo
 ```
 
 
 ## Binary Rewriter Version
 
-### For Dynamic Linked Binary
 
-1. Build Instrumentor
+### Dynamic Linked Binary
+
+1 Build Instrumentor
 ```
 $ cd Binary_based_implementation/dynamic linked proram/
 $ make
@@ -142,15 +144,9 @@ $ make
 
 2. Build and install the customized GLIBC
 
-Download a version of [glibc](https://www.gnu.org/software/libc/) which is compatible with your OS:
-```
-$ cd Binary_based_implementation/dynamic linked proram/
-$ make
-```
-#### Customize glibc.    
-1. Download a version of [glibc](https://www.gnu.org/software/libc/) which is compatible with your OS.
-2. Customize the stack_chk_fail.c file in glibc according the template in [/Binary_based_implementation/dynamic linked proram/stack_chk_fail.c](https://github.com/zhilongwang/PolymorphicCanaries/blob/master/Binary%20based%20implementation/dynamic%20linked%20proram/stack_chk_fail.c) // Your may simply replace the file with our one.
-3. Build and install the modified glibc.
+- Download a version of [glibc](https://www.gnu.org/software/libc/) which is compatible with your OS.
+- Replace the stack_chk_fail.c in GLIBC with a customized version [stack_chk_fail.c](https://github.com/zhilongwang/PolymorphicCanaries/blob/master/Binary_based_implementation/dynamic%20linked%20proram/stack_chk_fail.c).
+- Build and install the modified glibc.
 
 3. Rewrite your programs
 ```
@@ -158,11 +154,11 @@ $ ./Binary_based_implementation/dynamic linked proram/InstrumentationCode ./demo
 ```  
 
 4. Run your program with PSSP
-```
+~~~~{.sh}
 $ export LIB_LIBRARY_PATH=<CUSTOMIZED_GLIBC_LIB_DIR>/*.so
 $ export LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Binary_Based_Version/LIBPolymorphicCanaries.so
 $ ./demo
-```
+~~~~
 
 ### Static Linked Binary
 
