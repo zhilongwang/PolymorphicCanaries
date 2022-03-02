@@ -39,7 +39,7 @@ The GCC version is tested on Debian 10 with gcc-4.9/g++4.9.
 1. add follow source to /etc/apt/sources.list
 ```
 deb http://ftp.us.debian.org/debian/ jessie main contrib non-free
-#deb-src http://ftp.us.debian.org/debian/ jessie main contrib 
+deb-src http://ftp.us.debian.org/debian/ jessie main contrib 
 ```
 
 2. add key 
@@ -50,8 +50,7 @@ $ sudo apt-get update
 ```
 
 3. install gcc/g++, build-essential and gcc-<version>-plugin-dev
-```
-$ 
+``` 
 $ sudo apt install gcc-4.9 g++-4.9 gcc-4.9-plugin-dev build-essential
 ```
 
@@ -82,7 +81,7 @@ to 'CFLAGS' or 'CXXFLAGS' through configure, makefile, or Cmakefile.
 
 ### Run Compiled Program
 ```
-LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Binary_Based_Version/LIBPolymorphicCanaries.so ./demo
+$ LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Binary_Based_Version/LIBPolymorphicCanaries.so ./demo
 ```
 
 
@@ -92,7 +91,7 @@ LLVM Version is tested on llvm-6.0
 ### Install Dependency (LLVM, Clang) and 
 1. install llvm and clang
 ```
-# sudo apt-get install llvm-6.0 clang-6.0
+$ sudo apt-get install llvm-6.0 clang-6.0
 ```
 
 ### Build LLVM Pass and and Library 
@@ -106,11 +105,11 @@ $ make
 ```
 
 2. Build Runtime Environment
-~~~~{.sh}
+```
 # build runtime environment
 $ cd /Runtime_Environment/Compiler_Based_Version/
 $ make
-~~~~
+```
 
 ### Compile Your Program or Project
 1. For small program, compile your application with the following flags
@@ -127,14 +126,13 @@ to `CFLAGS' or `CXXFLAGS' through configure, makefile, or Cmakefile.
 
 ### Run Compiled Program
 ```
-LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Compiler_Based_Version/LIBPolymorphicCanaries.so ./demo
+$ LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Compiler_Based_Version/LIBPolymorphicCanaries.so ./demo
 ```
 
 
 ## Binary Rewriter Version
 
-
-### Dynamic Linked Binary
+### For Dynamic Linked Binary
 
 1. Build Instrumentor
 ```
@@ -160,11 +158,11 @@ $ ./Binary_based_implementation/dynamic linked proram/InstrumentationCode ./demo
 ```  
 
 4. Run your program with PSSP
-~~~~{.sh}
+```
 $ export LIB_LIBRARY_PATH=<CUSTOMIZED_GLIBC_LIB_DIR>/*.so
 $ export LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Binary_Based_Version/LIBPolymorphicCanaries.so
 $ ./demo
-~~~~
+```
 
 ### Static Linked Binary
 
