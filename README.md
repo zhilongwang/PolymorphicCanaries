@@ -32,7 +32,7 @@ If you use our code in your research, please cite our paper.
 }
 ```
 ## GCC Version
-The GCC version is tested on Debian 10 with gcc-4.9/g++4.9.
+The GCC version is tested on Debian 10 with gcc-4.9/g++-4.9.
 
 ### Install Dependency (gcc/g++, gcc-<version>-plugin-dev, build-essential)
 
@@ -45,7 +45,7 @@ deb-src http://ftp.us.debian.org/debian/ jessie main contrib
 2. add key and update
 ```
 $ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7638D0442B90D010
-$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 
+$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CBF8D6FD518E17E1
 $ sudo apt-get update
 ```
 
