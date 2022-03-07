@@ -45,7 +45,7 @@ deb-src http://ftp.us.debian.org/debian/ jessie main contrib
 2. add key and update
 ```
 $ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7638D0442B90D010
-$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 
+$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CBF8D6FD518E17E1
 $ sudo apt-get update
 ```
 
@@ -154,11 +154,11 @@ $ ./Binary_based_implementation/dynamic linked proram/InstrumentationCode ./demo
 ```  
 
 4. Run your program with PSSP
-~~~~{.sh}
+```
 $ export LIB_LIBRARY_PATH=<CUSTOMIZED_GLIBC_LIB_DIR>/*.so
 $ export LD_PRELOAD=<PROJECT_SOURCE_DIR>/Runtime_Environment/Binary_Based_Version/LIBPolymorphicCanaries.so
 $ ./demo
-~~~~
+```
 
 ### Static Linked Binary
 
