@@ -164,3 +164,12 @@ $ ./demo
 
 We provide a binary rewriter based on [Dyninst](http://www.umiacs.umd.edu/mc2symposium/slides/securityTutorialDyninst.pdf) for static linked programs. The implementation is located at [Dyninst Tool](https://github.com/zhilongwang/PolymorphicCanaries/tree/master/Binary_based_implementation/static%20linked%20program).
 
+
+## A docker image.
+We provide a docker image to quickly reproduce the environment (GCC PLUGIN VERSION).
+```
+$ sudo docker build -t pssp -f Dockerfile .
+$ docker run -it pssp:latest /bin/bash
+$ LD_PRELOAD=/home/PolymorphicCanaries/Runtime_Environment/Binary_Based_Version/LIBPolymorphicCanaries.so ./objs/nginx
+```
+
