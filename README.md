@@ -4,7 +4,7 @@ A High Efficient Protection against Brute-force Attacks
 =======================================================. 
 
 ## Authors
-- Zhilong Wang <mg1633081@smail.nju.edu.cn>
+- Zhilong Wang <zzw169@psu.edu>
 - Xuhua Ding <xhding@smu.edu.sg>
 - Chengbin Pang <mg1733051@smail.nju.edu.cn>
 - Jian Guo <mf1733018@smail.nju.edu.cn>
@@ -32,11 +32,11 @@ If you use our code in your research, please cite our paper.
 }
 ```
 ## GCC Version
-The GCC version is tested on Debian 10 with gcc-4.9/g++4.9.
+The GCC version is tested on Debian 10 with gcc-4.9/g++-4.9.
 
 ### Install Dependency (gcc/g++, gcc-<version>-plugin-dev, build-essential)
 
-1. add follow source to /etc/apt/sources.list
+1. add following source to /etc/apt/sources.list
 ```
 deb http://ftp.us.debian.org/debian/ jessie main contrib non-free
 deb-src http://ftp.us.debian.org/debian/ jessie main contrib 
