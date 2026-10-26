@@ -4,7 +4,7 @@ A High Efficient Protection against Brute-force Attacks
 =======================================================. 
 
 ## Authors
-- Zhilong Wang <zzw169@psu.edu>
+- Zhilong Wang <njuwangzhilong@gmail.com>
 - Xuhua Ding <xhding@smu.edu.sg>
 - Chengbin Pang <mg1733051@smail.nju.edu.cn>
 - Jian Guo <mf1733018@smail.nju.edu.cn>
